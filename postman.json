@@ -1,0 +1,822 @@
+{
+	"info": {
+		"_postman_id": "c6a2e4b1-1234-5678-9abc-d4f5e6a7b8c9",
+		"name": "Retail Analytics API (Vislivis)",
+		"description": "Flask backend için Postman koleksiyonu. Login sonrası JWT token'ı otomatik yönetir.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Initialization",
+			"item": [
+				{
+					"name": "Initialize Database",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/init",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"init"
+							]
+						},
+						"description": "Veritabanı tablolarını ve varsayılan admin kullanıcısını (admin/admin) oluşturur. Sadece bir kez çalıştırılması yeterlidir."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"accessToken\", pm.response.json().access_token);",
+									"    console.log(\"Access Token set successfully.\");",
+									"} else {",
+									"    console.error(\"Login failed. Token not set.\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Giriş yaparak JWT access token alır. Token otomatik olarak koleksiyon değişkenine kaydedilir."
+					},
+					"response": []
+				},
+				{
+					"name": "Register New User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"password\": \"testpassword\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Get Dashboard Overview",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dashboard/overview",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"overview"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer Analytics",
+			"item": [
+				{
+					"name": "Get Customer Analytics Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Customer Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location\": \"Giriş Alanı\",\n    \"customers_inside\": 5,\n    \"male_count\": 3,\n    \"female_count\": 2,\n    \"age_18_30\": 2,\n    \"age_30_50\": 2,\n    \"age_50_plus\": 1,\n    \"zone_visited\": \"Elektronik\",\n    \"purchase_amount\": 150.75,\n    \"is_returning\": true,\n    \"satisfaction_score\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/customers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Queue Analysis",
+			"item": [
+				{
+					"name": "Get Queue Analytics Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/queues?page=1&per_page=5&status=completed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"queues"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "5"
+								},
+								{
+									"key": "status",
+									"value": "completed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Queue Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_id\": \"CUST-12345\",\n    \"enter_time\": \"2024-07-29T14:30:00\",\n    \"exit_time\": \"2024-07-29T14:35:15\",\n    \"wait_time\": 315.0,\n    \"queue_position\": 3,\n    \"cashier_id\": \"Kasa-2\",\n    \"status\": \"completed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/queues",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"queues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Queue Chart Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/queue/chart-data?time_filter=week",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"queue",
+								"chart-data"
+							],
+							"query": [
+								{
+									"key": "time_filter",
+									"value": "week"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Heatmap Analysis",
+			"item": [
+				{
+					"name": "Get Heatmap Analytics Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/heatmaps?type=traffic&range=weekly&search=Giriş",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"heatmaps"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "traffic"
+								},
+								{
+									"key": "range",
+									"value": "weekly"
+								},
+								{
+									"key": "search",
+									"value": "Giriş"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Heatmap Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"zone\": \"Gıda Reyonu\",\n    \"intensity\": 85.5,\n    \"visitor_count\": 45,\n    \"heatmap_type\": \"duration\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/heatmaps",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"heatmaps"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Staff Management",
+			"item": [
+				{
+					"name": "Get Staff Analytics Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/staff?page=1&per_page=5&status=active",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"staff"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "5"
+								},
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Staff Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"staff_id\": \"STF-007\",\n    \"name\": \"Ayşe Yılmaz\",\n    \"role\": \"Satış Danışmanı\",\n    \"location\": \"Tekstil Reyonu\",\n    \"activity_level\": 92.0,\n    \"status\": \"active\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/staff",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"staff"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reports & AI Analysis",
+			"item": [
+				{
+					"name": "Get Reports List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/reports?page=1&per_page=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"reports"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Standard Report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"reportId\", pm.response.json().report_id);",
+									"    console.log(\"Report ID set to: \" + pm.response.json().report_id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"report_type\": \"customer\",\n    \"report_name\": \"Haftalık Müşteri Analizi Raporu\",\n    \"date_from\": \"2024-07-01\",\n    \"date_to\": \"2024-07-07\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/generate-report",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"generate-report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Report Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/view-report/{{reportId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"view-report",
+								"{{reportId}}"
+							]
+						},
+						"description": "Rapor oluşturduktan sonra alınan ID'yi kullanır. `{{reportId}}` değişkeni otomatik olarak set edilir."
+					},
+					"response": []
+				},
+				{
+					"name": "Download Report (PDF)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/download-report/{{reportId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"download-report",
+								"{{reportId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create AI-Powered Report (Gemini)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"aiReportId\", pm.response.json().report.id);",
+									"    console.log(\"AI Report ID set to: \" + pm.response.json().report.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"table\": \"CustomerData\",\n    \"columns\": [\"timestamp\", \"location\", \"people_count\", \"male_count\", \"female_count\"],\n    \"dateFrom\": \"2024-01-01\",\n    \"dateTo\": \"2024-07-30\",\n    \"prompt\": \"Müşteri yoğunluğunun en yüksek olduğu günleri ve lokasyonları analiz et. Cinsiyet dağılımındaki anormallikleri belirt ve pazarlama stratejileri için önerilerde bulun.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/create-report",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"create-report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download AI Report (PDF)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/download-ai-report/{{aiReportId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"download-ai-report",
+								"{{aiReportId}}"
+							]
+						},
+						"description": "AI raporu oluşturduktan sonra alınan ID'yi kullanır. `{{aiReportId}}` değişkeni otomatik olarak set edilir."
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Report",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Güncellenmiş Haftalık Müşteri Raporu\",\n    \"description\": \"Bu rapor, 1-7 Temmuz arası müşteri verilerini içerir ve yeni notlar eklenmiştir.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/edit-report/{{reportId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"edit-report",
+								"{{reportId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Report",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/delete-report/{{reportId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"analytics",
+								"delete-report",
+								"{{reportId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Settings",
+			"item": [
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Yeni Mağaza Müdürü\",\n    \"email\": \"new.admin@vislivis.com\",\n    \"phone\": \"+90 555 123 4567\",\n    \"department\": \"Yönetim\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currentPassword\": \"admin\",\n    \"newPassword\": \"new_secure_password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appearance Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/appearance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								"appearance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Appearance Settings",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"language\": \"en\",\n    \"dateFormat\": \"YYYY-MM-DD\",\n    \"timeFormat\": \"12h\",\n    \"isDarkMode\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/appearance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								"appearance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string",
+			"description": "Login sonrası otomatik olarak doldurulur."
+		},
+		{
+			"key": "reportId",
+			"value": "",
+			"type": "string",
+			"description": "Rapor oluşturulduğunda otomatik olarak doldurulur."
+		},
+		{
+			"key": "aiReportId",
+			"value": "",
+			"type": "string",
+			"description": "AI Raporu oluşturulduğunda otomatik olarak doldurulur."
+		}
+	]
+}
